@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Directions - TravelAI</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="TravelAI">
+    <link rel="apple-touch-icon" href="/images/travellogo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f3f4f6;
+            padding-top: 200px;
+        }
+
+        .location-input {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 0;
+            margin-top: 4rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .map-container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            height: 400px;
+            margin: 2rem auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .destination-info {
+            background: #f3f4f6;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .destination-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Map controls styling */
+        .leaflet-control-zoom {
+            margin: 12px !important;
+        }
+
+        .leaflet-control-attribution {
+            font-size: 10px !important;
+            padding: 2px 8px !important;
+        }
+
+        .leaflet-container {
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Custom marker styling */
+        .custom-marker {
+            position: relative;
+        }
+
+        .marker-pin {
+            width: 20px;
+            height: 20px;
+            background: #2563eb;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 220px;
+            }
+
+            .map-container {
+                width: 92%;
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 240px;
+            }
+
+            .map-container {
+                width: 94%;
+                height: 250px;
+            }
+            
+            .location-input {
+                padding: 1rem;
+            }
+        }
+
+        .travel-times {
+            width: 90%;
+            max-width: 800px;
+            margin: 1.5rem auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            padding: 0.5rem;
+        }
+
+        .time-card {
+            flex: 1;
+            min-width: 200px;
+            max-width: calc(25% - 1rem);
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .time-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .mode-icon {
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mode-icon i {
+            font-size: 1.2rem;
+            color: #2563eb;
+        }
+
+        .time-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .duration {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        .mode {
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        /* Add responsive styles for travel times */
+        @media (max-width: 1024px) {
+            .time-card {
+                max-width: calc(33.33% - 1rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .time-card {
+                max-width: calc(50% - 1rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .travel-times {
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+            
+            .time-card {
+                max-width: calc(50% - 0.4rem);
+                min-width: calc(50% - 0.4rem);
+            }
+        }
+
+        .back-button {
+            position: fixed;
+            left: 1rem;
+            top: 1rem;
+            padding: 0.8rem 1.2rem;
+            background: white;
+            color: #1f2937;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1001;
+            width: auto;
+        }
+
+        .back-button:hover {
+            background: #f3f4f6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .back-button i {
+            font-size: 1rem;
+            color: #2563eb;
+        }
+
+        /* Update input-container for back button */
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 0;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                top: 0.8rem;
+                left: 0.8rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .input-container {
+                margin-top: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="location-input">
+        <button class="back-button" onclick="window.location.href='index.html'">
+            <i class="fas fa-arrow-left"></i>
+            Back
+        </button>
+        <div class="input-container">
+            <div class="destination-info">
+                <div class="destination-name">Destination: <span id="place-name"></span></div>
+            </div>
+            <input type="text" id="current-location" placeholder="Enter your current location">
+            <button onclick="showDirections()">Show Directions</button>
+        </div>
+    </div>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+
+    <div class="travel-times" style="display: none;">
+        <div class="time-card">
+            <div class="mode-icon">
+                <i class="fas fa-car"></i>
+            </div>
+            <div class="time-info">
+                <span class="duration">25 mins</span>
+                <span class="mode">By Car</span>
+            </div>
+        </div>
+        <div class="time-card">
+            <div class="mode-icon">
+                <i class="fas fa-bicycle"></i>
+            </div>
+            <div class="time-info">
+                <span class="duration">45 mins</span>
+                <span class="mode">By Bike</span>
+            </div>
+        </div>
+        <div class="time-card">
+            <div class="mode-icon">
+                <i class="fas fa-walking"></i>
+            </div>
+            <div class="time-info">
+                <span class="duration">2 hrs</span>
+                <span class="mode">On Foot</span>
+            </div>
+        </div>
+        <div class="time-card">
+            <div class="mode-icon">
+                <i class="fas fa-train"></i>
+            </div>
+            <div class="time-info">
+                <span class="duration">30 mins</span>
+                <span class="mode">By Train</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="directions.js"></script>
+</body>
+</html> 

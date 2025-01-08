@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tourist Guide</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Smart Tourist Guide">
+    <link rel="apple-touch-icon" href="/images/travellogo.png">
+    
+    <!-- Additional PWA Meta Tags -->
+    <meta name="description" content="Discover & Navigate Tourist Spots with Ease">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/travellogo.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/images/travellogo.png">
+    <meta name="msapplication-TileImage" content="/images/travellogo.png">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    
+    <script src="/pwa.js" defer></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="#" class="logo">Smart Tourist Guide</a>
+        </div>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#contact" class="nav-cta">Get Started</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Discover & Navigate Tourist Spots with Ease</h1>
+            <p>Find popular tourist destinations, get real-time directions, and compare travel times across different modes of transport.</p>
+            <a href="explore.html" target="_blank" class="cta-button">Start Exploring</a>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e" alt="Travel Scene">
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <h2>Why Choose TravelAI</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Popular Spots Discovery</h3>
+                <p>Find top tourist attractions with real-time popularity badges and visitor statistics.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-route"></i>
+                <h3>Smart Navigation</h3>
+                <p>Get detailed directions and compare different travel modes to your destination.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-location-dot"></i>
+                <h3>Location Services</h3>
+                <p>Use your current location or search any place to explore tourist spots around it.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Search Location</h3>
+                <p>Enter any location or use your current position</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Discover Places</h3>
+                <p>Find popular tourist spots with visitor insights</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Get Directions</h3>
+                <p>Choose your transport mode and navigate easily</p>
+            </div>
+        </div>
+    </section>
+</body>
+<script src="script.js"></script>
+</html> 
