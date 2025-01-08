@@ -1,6 +1,6 @@
 {
   "name": "Smart Tourist Guide",
-  "short_name": "TravelAI",
+  "short_name": "Smart Tourist Guide",
   "description": "Your AI-Powered Travel Companion",
   "start_url": "./index.html",
   "display": "standalone",
